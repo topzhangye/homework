@@ -48,12 +48,15 @@
 	    (zy-append (cdr list1) list2))))
 
 (define (last-pair sep)
-     (if (null? (cdr sep))
-        sep
-        (last-pair (cdr sep))))
+  (if (null? (cdr sep))
+      sep
+      (last-pair (cdr sep))))
 
 (define (zy-reverse seq)
-     (if (null? seq)
-        nil
-        (append (zy-reverse (cdr seq)) (list (car seq)))))
+  (if (null? seq)
+      nil
+      (append (zy-reverse (cdr seq)) (list (car seq)))))
+
+(define (flatmap proc seq)
+  (fold-right append nil (map proc seq)))
 
