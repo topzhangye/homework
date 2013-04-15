@@ -1,7 +1,6 @@
 #lang racket
 (define nil '())
 
-(define (id x) x)
 
 (define (atom? sep)
   (and (not (pair? sep))
