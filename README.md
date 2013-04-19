@@ -1,1 +1,0 @@
-#SCIP Exe
