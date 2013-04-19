@@ -1,0 +1,11 @@
+(define (m a b c)
+  "the sum of two max number"
+  (if (> a b)
+      (if (> b c)
+          (+ a b)
+          (+ a c))
+      (if (< a c)
+          (if (>= c a)
+              (+ b c)
+              (+ b a))
+          (+ b a))))
