@@ -150,3 +150,72 @@
 
 (define (one? n)
   (n= n 1))
+
+(define (rember* a l)
+  (cond ((null? l) nil)
+    ((pair? (car l))
+      (cons (rember* a (car l))
+        (rember* a (cdr l))))
+    ((eq? a (car l)) (rember* a (cdr l)))
+    (else (cons (car l) (rember* a (cdr l))))))
+
+(define (insertL* new old l)
+  (cond ((null? l) nil)
+    ((pair? (car l))
+      (cons (insertL* new old (car l))
+        (insertL* new old (cdr l))))
+    ((eq? old (car l))
+      (cons new
+        (cons old 
+          (insertL* new old (cdr l)))))
+    (else
+      (cons (car l)
+        (insertL* new old (cdr l))))))
+
+(define (insertR* new old l)
+  (cond ((null? l) '())
+    ((pair? (car l))
+      (cons (insertR* new old (car l))
+        (insertR* new old (cdr l))))
+    ((eq? old (car l))
+      (cons old
+        (cons new
+          (insertR* new old (cdr l)))))
+    (else
+      (cons (car l)
+        (insertR* new old (cdr l))))))
+
+(define (occur* a l)
+  (cond ((null? l) 0)
+    ((pair? (car l))
+      (add 
+        (occur* a (car l))
+        (occur* a (cdr l))))
+    ((eq? a (car l))
+      (add1 (occur* a (cdr l))))
+    (else
+      (occur* a (cdr l)))))
+
+(define (member* a l)
+  (cond ((null? l) #f)
+    ((pair? (car l))
+      (or (member* a (car l))
+        (member* a (cdr l))))
+    ((eq? a (car l)) #t)
+    (else (member* a (cdr l)))))
+
+(define (leftmost l)
+  (cond ((atom? (car l)) (car l))
+    (else (leftmost (cdr l)))))
+
+(define (eqlist? a b)
+  (cond ((and (null? a) (null? b)) #t)
+    ((or (null? a) (null? b)) #f)
+    ((and (atom? (car a)) (atom? (car b)))
+      (and (eq?  (car a) (car b)) 
+        (eqlist? (cdr a) (cdr b))))
+    ((or (atom? (car a)) (atom? (car b))) #f)
+    (else (and (eqlist? (car a) (car b))
+      (eqlist? (cdr a) (cdr b))))))
+
+      
