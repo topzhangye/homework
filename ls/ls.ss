@@ -81,3 +81,72 @@
   (cond ((zero? b) zero)
     (else (add a (mul a (sub1 b))))))
 
+(define (tup+ tup1 tup2)
+  (cond ((null? tup1) tup2)
+    ((null? tup2) tup1)
+    (else (cons (add (car tup1)
+                     (car tup2))
+                (tup+ (cdr tup1) (cdr tup2))))))
+
+(define (n> a b)
+  (cond ((zero? a) #f)
+    ((zero? b) #t)
+    (else (n> (sub1 a) (sub1 b)))))
+
+(define (n< a b)
+  (cond ((zero? b) #f)
+    ((zero? a) #t)
+    (else (n< (sub1 a) (sub1 b)))))
+
+(define (n= a b)
+  (cond ((n< a b) #f)
+    ((n> a b) #f)
+    (else #t)))
+
+(define (pow a b)
+  (cond ((zero? b) 1)
+    (else (mul a 
+            (pow a (sub1 b))))))
+
+(define (div a b)
+  (cond ((n< a b) 0)
+    (else (add1 (div (sub a b) b)))))
+
+(define (len lat)
+  (cond ((null? lat) 0)
+    (else (add1 (len (cdr lat))))))
+
+
+(define (pick n lat)
+  (cond ((zero? (sub1 n)) (car lat))
+    (else (pick (sub1 n) (cdr lat)))))
+
+(define (rempick n lat)
+  (cond ((zero? (sub1 n)) (cdr lat))
+    (else (cons (car lat) (rempick (sub1 n) (cdr lat))))))
+
+(define (no-nums lat)
+  (cond ((null? lat) nil)
+    ((number? (car lat)) (no-nums (cdr lat)))
+    (else (cons (car lat) 
+            (no-nums (cdr lat))))))
+
+(define (all-nums lat)
+  (cond ((null? lat) nil)
+    ((number? (car lat)) 
+      (cons (car lat) (all-nums (cdr lat))))
+    (else (all-nums (cdr lat)))))
+
+(define (eqan? a b)
+  (cond ((and (number? a) (number? b)) (n= a b))
+    ((or (number? a) (number? b)) #f)
+    (else (eq? a b))))
+
+(define (occur a lat)
+  (cond ((null? lat) 0)
+    ((eq? a (car lat))
+      (add1 (occur a (cdr lat))))
+    (else (occur a (cdr lat)))))
+
+(define (one? n)
+  (n= n 1))
