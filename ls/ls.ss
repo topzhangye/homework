@@ -218,4 +218,125 @@
     (else (and (eqlist? (car a) (car b))
       (eqlist? (cdr a) (cdr b))))))
 
-      
+(define (rember-f test? a l)
+  (cond ((null? l) nil)
+    ((test? a (car l))
+      (rember-f test? a (cdr l)))
+    (else (cons (car l)
+            (rember-f test? a (cdr l))))))
+
+(define (insert-g seqf)
+  (lambda (new old lat)
+    (cond ((null? lat) nil)
+      ((eq? old (car lat))
+        (seqf new old 
+          ((insert-g seqf) new old (cdr lat))))
+      (else
+        (cons (car lat)
+          ((insert-g seqf) new old (cdr lat)))))))
+
+(define (seqA new old l)
+  (cons new
+    (cons old l)))
+
+(define (seqB new old l)
+  (cons old
+    (cons new l)))
+
+(define (seqS new old l)
+  (cons new l))
+
+(define (seqR new old l)
+  l)
+
+(define (set? lat)
+  (cond ((null? lat) #t)
+    ((member? (car lat) (cdr lat))
+      #f)
+    (else (set? (cdr lat)))))
+
+(define (make-set lat)
+  (cond ((null? lat) nil)
+    ((member? (car lat) (cdr lat))
+      (make-set (cdr lat)))
+    (else
+      (cons (car lat) (make-set (cdr lat))))))
+
+(define (makeset lat)
+  (cond ((null? lat) nil)
+    (else (cons (car lat)
+              (makeset  
+                (multirember (car lat) (cdr lat)))))))
+
+(define (subset? set1 set2)
+  (cond ((null? set1) #t)
+    (else (and 
+            (member? (car set1) set2)
+            (subset? (cdr set1) set2)))))
+
+(define (eqset? set1 set2)
+  (and (subset? set1 set2)
+    (subset? set2 set1)))
+
+(define (intersect? set1 set2)
+  (if (null? set1)
+      #f
+      (or (member? (car set1) set2)
+        (intersect? (cdr set1) set2))))
+
+(define (intersect set1 set2)
+  (cond ((null? set1) nil)
+    ((member? (car set1) set2)
+      (cons (car set1)
+        (intersect (cdr set1) set2)))
+    (else (intersect (cdr set1) set2))))
+
+(define (union set1 set2)
+  (cond ((null? set1) set2)
+    ((member? (car set1) set2)
+      (union (cdr set1) set2))
+    (else (cons (car set1)
+            (union (cdr set1) set2)))))
+
+(define (intersectall l-set)
+  (cond ((null? (cdr l-set)) (car l-set))
+    (else (intersect 
+      (car l-set)
+      (intersectall (cdr l-set))))))
+
+(define (first l)
+  (car l))
+
+(define (second l)
+  (car (cdr l)))
+
+(define (third l)
+  (car (cdr (cdr l))))
+
+(define (fun? rel)
+  (set? (firsts rel)))
+
+(define (build x y)
+  (cons x
+    (cons y nil)))
+
+(define (revrel rel)
+  (cond ((null? rel) nil)
+    (else (cons (build (second (car rel))
+                  (first (car rel)))
+            (revrel (cdr rel))))))
+
+(define (op sep)
+  (second sep))
+
+(define (get-prim op)
+  (cond ((eq? '+ op) add)
+    ((eq? '- op) sub)
+    ((eq? 'X op) mul)
+    (else 'hello)))
+
+(define (value sep)
+  (cond ((atom? sep) sep)
+    (else ((get-prim (op sep))
+            (value (first sep))
+            (value (third sep))))))
