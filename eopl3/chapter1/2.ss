@@ -190,3 +190,25 @@
 	      (26 (20 (17 () ())
 		      ())
 		  (31 () ()))))
+
+(define (make-tree n)
+  (if (zero? n)
+      '()
+      (list (make-tree (- n 1))
+	    (make-tree (- n 1)))))
+
+
+(define (count-tree tree tag)
+  (if (null? tree)
+      (list (+ 1 tag) tag)
+      (let* ((l (count-tree (car tree) tag))
+	     (r (count-tree (cadr tree) (car l))))
+	(list (car r)
+	      (list (cadr l)
+		    (cadr r))))))
+
+(define (number-elements l)
+  (if (null? l) '()
+      (cons (list 0 (car l))
+	      (number-elements (cdr l)))))
+
